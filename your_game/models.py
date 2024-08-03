@@ -25,8 +25,26 @@ class Skill(BaseEntity, MPTTModel):
         return self.name
 
 
+class TaskType(models.TextChoices):
+    TASK = 'task', 'Task'
+    REGULAR_TASK = 'regular_task'
+    HABIT = 'habit'
+
+
 class Task(BaseEntity, MPTTModel):
-    name = models.CharField(max_length=200)
     parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
-    type = models.CharField(max_length=200)
+    type = models.CharField(max_length=200, choices=TaskType.choices)
+    name = models.CharField(max_length=200)
+    description = models.TextField(null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.name}"
+
+
+class Event(BaseEntity):
+    title = models.CharField(max_length=200)
+    description = models.TextField(null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.title}"
 
